@@ -1,3 +1,6 @@
+import Base.Threads.@spawn
+# Make sure to run Julia with --threads NoOfThreads to enable multi-threading!
+
 legalMoves = [2 3 4
     1 5 7
     1 6 8
@@ -58,6 +61,12 @@ end
 noSimulations = 1_000_000
 
 # Run the function 10 times and print their averages.
+tasks = Task[]
 for j in 1:10
-    println(simulate(noSimulations, legalMoves))
+    push!(tasks, @spawn simulate(noSimulations, legalMoves)) # Run each simulation in a separate thread
+end
+
+# Print the result of each thread once it finishes running the simulation
+for t in tasks
+    println(fetch(t))
 end
