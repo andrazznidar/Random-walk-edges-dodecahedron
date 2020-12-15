@@ -1,6 +1,9 @@
 import Base.Threads.@spawn
 # Make sure to run Julia with --threads NoOfThreads to enable multi-threading!
 
+using Random
+# Increase speed of random as per https://bkamins.github.io/julialang/2020/11/20/rand.html
+
 legalMoves = [2 3 4
     1 5 7
     1 6 8
@@ -25,13 +28,13 @@ legalMoves = [2 3 4
 
 #= Function move expects one number as a current vertex and a matrix of legal moves.
 It returns one number as a new, randomly chosen, legal, current vertex. =#
-function move(n, A)
-    return A[n, rand(1:3)]
+function move(n, A, rng::MersenneTwister)
+    return A[n, rand(rng, 1:3)]
 end
 
 #= Function simulate expects one number as the number of simulations and a matrix of legal moves.
 It returns the average number of moves the spider needed in to get to an ant. =#
-function simulate(noSimulations, B)
+function simulate(noSimulations, B, rng::MersenneTwister)
     sum = 0
     for i in 1:noSimulations
         #= The state of the simulation is reset.
@@ -44,7 +47,7 @@ function simulate(noSimulations, B)
         
         # Until the spider moves to the desired position it moves in random, legal moves that are counted.
         while (ant != spider)
-            spider = move(spider, B)
+            spider = move(spider, B, rng)
             noMoves += 1
         end
 
@@ -64,7 +67,7 @@ noSimulations = 50_000_000
 tasks = Task[]
 @time begin
     for j in 1:16
-        push!(tasks, @spawn simulate(noSimulations, legalMoves)) # Run each simulation in a separate thread
+        push!(tasks, @spawn simulate(noSimulations, legalMoves, MersenneTwister())) # Run each simulation in a separate thread
     end
 
     # Print the result of each thread once it finishes running the simulation
