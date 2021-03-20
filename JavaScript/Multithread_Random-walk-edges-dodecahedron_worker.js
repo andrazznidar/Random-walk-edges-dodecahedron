@@ -1,3 +1,6 @@
+// Ported from Julia version https://github.com/andrazznidar/Random-walk-edges-dodecahedron/
+
+
 legalMoves = [[1, 2, 3], [0, 4, 6], [0, 5, 7], [0, 8, 9], [1, 5, 10], [2, 4, 11], [1, 8, 12], [2, 9, 13], [3, 6, 14], [3, 7, 15], [
     4, 12, 16], [5, 13, 16], [6, 10, 17], [7, 11, 18], [8, 15, 17], [9, 14, 18], [10, 11, 19], [12, 14, 19], [13, 15, 19], [16, 17, 18]];
 // Each line of this matrix legalMoves represents a vertex and specifies three neighboring vertices.
