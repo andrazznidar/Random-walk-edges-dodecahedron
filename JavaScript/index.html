@@ -13,10 +13,9 @@
     <script>
         // Web Workers do not work on the file:// protocol.
     
-        // Check for running exported on file protocol
-        if (window.location.protocol.substr(0, 4) !== "http")
-        {
-            alert("Web Workers won't on the file:// protocol. Please upload the files to a https server.");
+        // Check if running on file protocol
+        if (window.location.protocol.substr(0, 4) !== "http") {
+            alert("Web Workers won't work on the file:// protocol. Please upload the files to a https server.");
         }
         
     </script>
