@@ -1,58 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="UTF-8" />
-	<title>Random-walk-edges-dodecahedron</title>
-</head> 
- 
-<body> 
+    <title>Random-walk-edges-dodecahedron</title>
+  </head>
 
-    <div style="width:50vw; background-color: red; height: 1em;"></div>
+  <body>
+    <div style="width: 50vw; background-color: red; height: 1em"></div>
     <div style="width: 100vw; background-color: aquamarine; height: 1em"></div>
 
     <script>
-        // Web Workers do not work on the file:// protocol.
-    
-        // Check if running on file protocol
-        if (window.location.protocol.substr(0, 4) !== "http") {
-            alert("Web Workers won't work on the file:// protocol. Please upload the files to a https server.");
-        }
-        
+      // Web Workers do not work on the file:// protocol.
+
+      // Check if running on file protocol
+      if (window.location.protocol.substr(0, 4) !== "http") {
+        alert(
+          "Web Workers won't work on the file:// protocol. Please upload the files to a https server."
+        );
+      }
     </script>
-    
-    <input type="button" value="Start!" onclick="run()">
+
+    <input type="button" value="Start!" onclick="run()" />
     <p id="log">Log:</p>
-	<script>
+    <script>
+      // Ported from Julia version https://github.com/andrazznidar/Random-walk-edges-dodecahedron/
 
-        // Ported from Julia version https://github.com/andrazznidar/Random-walk-edges-dodecahedron/
+      // We put the simulations into WebWorkers. This prevents the browser from hanging (not responding) as they are run in separate/background/not-main threads.
+      // WebWorkers cannot be run over file:// protocol.
 
-        // We put the simulations into WebWorkers. This prevents the browser from hanging (not responding) as they are run in separate/background/not-main threads.
-        // WebWorkers cannot be run over file:// protocol.
+      // Run the function 10 times and print their averages.
 
+      function run() {
+        log.innerText = "Began.\n";
+        timesToRun = 16;
+        var start = window.performance.now();
 
-        // Run the function 10 times and print their averages.
+        for (let i = 0; i < timesToRun; i++) {
+          let w = new Worker(
+            "Multithread_Random-walk-edges-dodecahedron_worker.js"
+          ); // Create a new WebWorker for each simulation
 
-        function run() {
-            log.innerText = "Began.\n";
-            timesToRun = 16;
-            var start = window.performance.now();
-            
-            for(let i = 0; i < timesToRun; i++) {
-                let w = new Worker("Multithread_Random-walk-edges-dodecahedron_worker.js"); // Create a new WebWorker for each simulation
-
-                w.onmessage = function(event) {
-                    console.log(event.data);
-                    log.innerText += ("\n" + event.data);
-                    w.terminate(); // Terminate the worker to free up resources
-                    if(--timesToRun == 0) {
-                        var end = window.performance.now();
-                        var time = end - start;
-                        log.innerText += ("\n" + time); // All simulations finished, stop the timer
-                    }
-                };
+          w.onmessage = function (event) {
+            console.log(event.data);
+            log.innerText += "\n" + event.data;
+            w.terminate(); // Terminate the worker to free up resources
+            if (--timesToRun == 0) {
+              var end = window.performance.now();
+              var time = end - start;
+              log.innerText += "\n" + time; // All simulations finished, stop the timer
             }
+          };
         }
-
+      }
     </script>
-</body> 
-</html> 
+  </body>
+</html>
