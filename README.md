@@ -1,6 +1,11 @@
 # Random-walk-edges-dodecahedron
 Calculate the expected number of random moves along the edges of a dodecahedron to get to the opposite vertex.
 
+# Usage with JavaScript
+1. Open https://andrazznidar.github.io/Random-walk-edges-dodecahedron/JavaScript/
+2. Click `Start!` and wait.
+4. Observe the result **35**.
+
 # Usage with Julia
 1. Install Julia high-level programming language.
 2. Download the file `Random-walk-edges-dodecahedron.jl` from the `Julia` folder in this repository.
